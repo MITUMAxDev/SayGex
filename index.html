@@ -43,14 +43,36 @@
             z-index: 1;
         }
 
+        /* Text Fade Animation for Header */
+        @keyframes fade-orange-gold {
+            0%, 100% {
+                color: #ffa500;
+            }
+            50% {
+                color: gold;
+            }
+        }
+
+        @keyframes fade-white-gray {
+            0%, 100% {
+                color: white;
+            }
+            50% {
+                color: gray;
+            }
+        }
+
         header h1 {
             font-size: 3rem;
-            color: #fff;
             letter-spacing: 2px;
         }
 
         header h1 span {
-            color: #ffa500;
+            animation: fade-orange-gold 5s infinite;
+        }
+
+        header h1 {
+            animation: fade-white-gray 5s infinite;
         }
 
         nav {
@@ -68,6 +90,13 @@
         }
 
         nav a:hover {
+            color: #ffa500;
+        }
+
+        /* Real-time Viewer Count */
+        .viewer-count {
+            margin-top: 10px;
+            font-size: 1.2rem;
             color: #ffa500;
         }
 
@@ -93,125 +122,23 @@
             color: #ddd;
         }
 
-        /* Features Section */
-        .features {
+        /* Social Media Section */
+        .social-media {
+            margin-top: 30px;
+            padding: 20px 0;
             background-color: #1e1e1e;
-            padding: 40px;
-            margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
 
-        .features h3 {
-            font-size: 2rem;
-            color: #ffa500;
-        }
-
-        .features p {
-            font-size: 1.1rem;
-            color: #ddd;
-            margin-top: 15px;
-        }
-
-        /* Image Carousel */
-        .image-carousel {
-            position: relative;
-            width: 80%;
-            max-width: 800px;
-            margin: 40px auto;
-            overflow: hidden;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-            border-radius: 10px;
-        }
-
-        .carousel-images {
-            display: flex;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .carousel-images img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 15px;
-            transition: filter 0.5s ease, transform 0.5s ease;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .carousel-images img.active {
-            filter: brightness(1) blur(0);
-            transform: scale(1.05);
-            z-index: 1;
-        }
-
-        .carousel-images img:not(.active) {
-            filter: brightness(0.5) blur(5px);
-            transform: scale(0.95);
-            z-index: 0;
-        }
-
-        .carousel-images img:nth-child(1) { left: 0; }
-        .carousel-images img:nth-child(2) { left: 100%; }
-        .carousel-images img:nth-child(3) { left: 200%; }
-
-        /* Script Section */
-                .script-box {
-            margin-top: 20px;
-            background-color: #0d1117;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-            border: 1px solid #30363d;
-            position: relative;
-            max-width: 100%;
-            overflow-x: auto; /* Allow horizontal scrolling if content is too wide */
-        }
-
-        .script-box p {
-            font-size: 1.2rem;
-            color: #c9d1d9;
-            white-space: nowrap; /* Prevent text from wrapping */
-        }
-
-        @media (max-width: 768px) {
-            .script-box p {
-                font-size: 1rem; /* Smaller font on mobile */
-            }
-        }
-
-        .script-box::before {
-            content: 'SayGex Script';
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background-color: #0d1117;
-            padding: 2px 8px;
-            font-size: 0.9rem;
-            color: #c9d1d9;
-            border-radius: 5px;
-        }
-
-
-        button {
-            background-color: #ffa500;
+        .social-media a {
             color: #fff;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
+            margin: 0 15px;
+            font-size: 2rem;
+            transition: color 0.3s ease;
         }
 
-        button:hover {
-            background-color: #e59400;
+        .social-media a:hover {
+            color: #ffa500;
         }
 
         /* Team Section */
@@ -265,13 +192,6 @@
         footer p {
             color: #bbb;
         }
-
-        @media (max-width: 768px) {
-            .team-grid {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
     </style>
 </head>
 <body>
@@ -279,6 +199,9 @@
     <!-- Header Section -->
     <header>
         <h1>SAY<span>GEX</span> SCRIPT HUB</h1>
+        <div class="viewer-count">
+            Current viewers: <span id="viewerCount">Loading...</span>
+        </div>
         <nav>
             <a href="#about">About</a>
             <a href="#scripts">Scripts</a>
@@ -299,98 +222,79 @@
         <p>- Fast & Secure Load Times</p>
         <p>- Compatible with All Devices</p>
         <p>- Frequent Updates and Add-ons</p>
-    <p>- Free Source Code Giving away</p>
-    <p>- Multi-Language Support Team</p>
-    </section>
-
-    <!-- Image Carousel -->
-    <section class="image-carousel">
-        <div class="carousel-images">
-            <img src="media/meme1.jpeg" alt="Image 1" class="active">
-            <img src="media/meme2.jpg" alt="Image 2">
-            <img src="media/meme3.jpg" alt="Image 3">
-        </div>
-    </section>
-
-    <!-- Script Section -->
-    <section class="script" id="scripts">
-        <h2>Get Script Here</h2>
-        <div class="script-box">
-            <p>loadstring(game:HttpGetAsync('https://pornhub.org'))()</p>
-            <button id="copy-btn" onclick="copyToClipboard()">Copy</button>
-        </div>
+        <p>- Free Source Code Giving away</p>
+        <p>- Multi-Language Support Team</p>
     </section>
 
     <!-- Team Section -->
-<section class="team" id="team">
-    <h2>Meet the Team</h2>
-    <div class="team-grid">
-        <div class="team-member">
-            <img src="media/mituma.jpg" alt="mituma">
-            <p class="name">mituma</p>
-            <p class="role">Zenith HUB Owner</p>
+    <section class="team" id="team">
+        <h2>Meet the Team</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="media/mituma.jpg" alt="mituma">
+                <p class="name">mituma</p>
+                <p class="role">Zenith HUB Owner</p>
+            </div>
+            <div class="team-member">
+                <img src="media/eclipse.png" alt="eclipse">
+                <p class="name">eclipse.py</p>
+                <p class="role">A nigga shit that did nothing</p>
+            </div>
+            <div class="team-member">
+                <img src="media/xr.png" alt="xr.lolz">
+                <p class="name">xr.lolz</p>
+                <p class="role">Hello World HUB Owner</p>
+            </div>
+            <div class="team-member">
+                <img src="media/n1ght.png" alt="27_n1ght">
+                <p class="name">27_n1ght</p>
+                <p class="role">Sakura HUB Owner</p>
+            </div>
+            <div class="team-member">
+                <img src="media/w2b.png" alt="_w2b_">
+                <p class="name">_w2b_</p>
+                <p class="role">Autumn HUB Owner</p>
+            </div>
+            <div class="team-member">
+                <img src="media/hieu.jpeg" alt="hieukokomi">
+                <p class="name">hieukokomi</p>
+                <p class="role">Vietnamese Moderator</p>
+            </div>
         </div>
-        <div class="team-member">
-            <img src="media/eclipse.png" alt="eclipse">
-            <p class="name">eclipse.py</p>
-            <p class="role">A nigga shit that did nothing</p>
-        </div>
-        <div class="team-member">
-            <img src="media/xr.png" alt="xr.lolz">
-            <p class="name">xr.lolz</p>
-            <p class="role">Hello World HUB Owner</p>
-        </div>
-        <div class="team-member">
-            <img src="media/n1ght.png" alt="27_n1ght">
-            <p class="name">27_n1ght</p>
-            <p class="role">Sakura HUB Owner</p>
-        </div>
-        <div class="team-member">
-            <img src="media/w2b.png" alt="_w2b_">
-            <p class="name">_w2b_</p>
-            <p class="role">Autumn HUB Owner</p>
-        </div>
-        <div class="team-member">
-            <img src="media/hieu.jpeg" alt="hieukokomi">
-            <p class="name">hieukokomi</p>
-            <p class="role">Vietnamese Moderator</p>
-        </div>
-    </div>
-</section>
+    </section>
+
+    <!-- Social Media Section -->
+    <section class="social-media">
+        <a href="https://discord.com" target="_blank"><i class="fab fa-discord"></i></a>
+        <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://github.com" target="_blank"><i class="fab fa-github"></i></a>
+    </section>
+
     <!-- Footer -->
     <footer>
         <p>&copy; 2024 SayGex Script Hub. All Rights Reserved.</p>
     </footer>
 
     <script>
-        // JavaScript to handle carousel image transitions
-        const images = document.querySelectorAll('.carousel-images img');
-        let currentIndex = 0;
-
-        function changeImage() {
-            images.forEach((img, index) => {
-                img.classList.remove('active');
-                img.style.left = `${(index - currentIndex) * 100}%`;
+        // JavaScript to handle the real-time viewer count
+        function fetchViewerCount() {
+            // Simulate an API call (replace this with actual backend or service)
+            return new Promise((resolve) => {
+                const randomViewerCount = Math.floor(Math.random() * 100) + 1; // Random number for simulation
+                setTimeout(() => resolve(randomViewerCount), 1000);
             });
-
-            images[currentIndex].classList.add('active');
-
-            currentIndex = (currentIndex + 1) % images.length;
         }
 
-        setInterval(changeImage, 3000); // Change image every 3 seconds
-
-        function copyToClipboard() {
-            const script = "loadstring(game:HttpGetAsync('https://saygexhub.com'))()";
-            navigator.clipboard.writeText(script);
-            const button = document.getElementById('copy-btn');
-            button.textContent = 'Copied!';
-            button.style.backgroundColor = '#00c853';
-            setTimeout(() => {
-                button.textContent = 'Copy';
-                button.style.backgroundColor = '#ffa500';
-            }, 1000);
+        function updateViewerCount() {
+            fetchViewerCount().then(count => {
+                document.getElementById('viewerCount').textContent = count;
+            });
         }
+
+        setInterval(updateViewerCount, 5000); // Update every 5 seconds
+
+        // Initial load
+        updateViewerCount();
     </script>
 </body>
 </html>
