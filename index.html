@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Exclusuck Striker</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(120deg, #151515, #252525);
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Particle Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png');
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        header {
+            background-color: #282828;
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        header h1 span {
+            color: #ffa500;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #ffa500;
+        }
+
+        section {
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .about {
+            background-color: #333;
+        }
+
+        .about h2, .script h2, .team h2 {
+            font-size: 2.5rem;
+            color: #ffa500;
+            margin-bottom: 30px;
+        }
+
+        .about p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: auto;
+            color: #ddd;
+        }
+
+        /* Features Section */
+        .features {
+            background-color: #1e1e1e;
+            padding: 40px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .features h3 {
+            font-size: 2rem;
+            color: #ffa500;
+        }
+
+        .features p {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-top: 15px;
+        }
+
+        /* Image Carousel */
+        .image-carousel {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            margin: 40px auto;
+            overflow: hidden;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            border-radius: 10px;
+        }
+
+        .carousel-images {
+            display: flex;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: filter 0.5s ease, transform 0.5s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .carousel-images img.active {
+            filter: brightness(1) blur(0);
+            transform: scale(1.05);
+            z-index: 1;
+        }
+
+        .carousel-images img:not(.active) {
+            filter: brightness(0.5) blur(5px);
+            transform: scale(0.95);
+            z-index: 0;
+        }
+
+        .carousel-images img:nth-child(1) { left: 0; }
+        .carousel-images img:nth-child(2) { left: 100%; }
+        .carousel-images img:nth-child(3) { left: 200%; }
+
+        /* Script Section */
+        .script-box {
+            margin-top: 20px;
+            background-color: #0d1117;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            border: 1px solid #30363d;
+            position: relative;
+        }
+
+        .script-box::before {
+            content: 'SayGex Script';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background-color: #0d1117;
+            padding: 2px 8px;
+            font-size: 0.9rem;
+            color: #c9d1d9;
+            border-radius: 5px;
+        }
+
+        .script-box p {
+            font-size: 1.2rem;
+            color: #c9d1d9;
+        }
+
+        button {
+            background-color: #ffa500;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e59400;
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .team-member {
+            background-color: #282828;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .team-member img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .team-member p {
+            color: #fff;
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+
+        .team-member .role {
+            color: #ffa500;
+            font-size: 1rem;
+        }
+
+        footer {
+            background-color: #282828;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer p {
+            color: #bbb;
+        }
+
+        @media (max-width: 768px) {
+            .team-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>SAY<span>GEX</span> SCRIPT HUB</h1>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#scripts">Scripts</a>
+            <a href="#team">Team</a>
+        </nav>
+    </header>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <h2>Why Choose SayGex HUB?</h2>
+        <p>At SayGex HUB, we deliver powerful, high-quality scripts compatible with all devices. Our dedicated team provides 24/7 support, ensuring a seamless experience.</p>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h3>Key Features of SayGex HUB</h3>
+        <p>- 100% Free Scripts for Roblox</p>
+        <p>- Fast & Secure Load Times</p>
+        <p>- Compatible with All Devices</p>
+        <p>- Frequent Updates and Add-ons</p>
+    </section>
+
+    <!-- Image Carousel -->
+    <section class="image-carousel">
+        <div class="carousel-images">
+            <img src="media/meme1.jpeg" alt="Image 1" class="active">
+            <img src="media/meme2.jpg" alt="Image 2">
+            <img src="media/meme3.jpg" alt="Image 3">
+        </div>
+    </section>
+
+    <!-- Script Section -->
+    <section class="script" id="scripts">
+        <h2>Get Script Here</h2>
+        <div class="script-box">
+            <p>loadstring(game:HttpGetAsync('https://pornhub.org'))()</p>
+            <button id="copy-btn" onclick="copyToClipboard()">Copy</button>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+<section class="team" id="team">
+    <h2>Meet the Team</h2>
+    <div class="team-grid">
+        <div class="team-member">
+            <img src="media/mituma.jpg" alt="mituma">
+            <p class="name">mituma</p>
+            <p class="role">Zenith HUB Owner</p>
+        </div>
+        <div class="team-member">
+            <img src="media/eclipse.png" alt="eclipse">
+            <p class="name">eclipse.py</p>
+            <p class="role">A nigga shit that did nothing</p>
+        </div>
+        <div class="team-member">
+            <img src="media/xr.png" alt="xr.lolz">
+            <p class="name">xr.lolz</p>
+            <p class="role">Hello World HUB Owner</p>
+        </div>
+        <div class="team-member">
+            <img src="media/n1ght.png" alt="27_n1ght">
+            <p class="name">27_n1ght</p>
+            <p class="role">Sakura HUB Owner</p>
+        </div>
+        <div class="team-member">
+            <img src="media/_w2b_.png" alt="_w2b_">
+            <p class="name">_w2b_</p>
+            <p class="role">Autumn HUB Owner</p>
+        </div>
+        <div class="team-member">
+            <img src="media/hieu.jpeg" alt="hieukokomi">
+            <p class="name">hieukokomi</p>
+            <p class="role">Vietnamese Moderator</p>
+        </div>
+    </div>
+</section>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 SayGex Script Hub. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // JavaScript to handle carousel image transitions
+        const images = document.querySelectorAll('.carousel-images img');
+        let currentIndex = 0;
+
+        function changeImage() {
+            images.forEach((img, index) => {
+                img.classList.remove('active');
+                img.style.left = `${(index - currentIndex) * 100}%`;
+            });
+
+            images[currentIndex].classList.add('active');
+
+            currentIndex = (currentIndex + 1) % images.length;
+        }
+
+        setInterval(changeImage, 3000); // Change image every 3 seconds
+
+        function copyToClipboard() {
+            const script = "loadstring(game:HttpGetAsync('https://saygexhub.com'))()";
+            navigator.clipboard.writeText(script);
+            const button = document.getElementById('copy-btn');
+            button.textContent = 'Copied!';
+            button.style.backgroundColor = '#00c853';
+            setTimeout(() => {
+                button.textContent = 'Copy';
+                button.style.backgroundColor = '#ffa500';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
