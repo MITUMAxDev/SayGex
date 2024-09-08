@@ -162,7 +162,7 @@
         .carousel-images img:nth-child(3) { left: 200%; }
 
         /* Script Section */
-        .script-box {
+                .script-box {
             margin-top: 20px;
             background-color: #0d1117;
             padding: 20px;
@@ -170,6 +170,20 @@
             display: inline-block;
             border: 1px solid #30363d;
             position: relative;
+            max-width: 100%;
+            overflow-x: auto; /* Allow horizontal scrolling if content is too wide */
+        }
+
+        .script-box p {
+            font-size: 1.2rem;
+            color: #c9d1d9;
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+        @media (max-width: 768px) {
+            .script-box p {
+                font-size: 1rem; /* Smaller font on mobile */
+            }
         }
 
         .script-box::before {
@@ -184,10 +198,6 @@
             border-radius: 5px;
         }
 
-        .script-box p {
-            font-size: 1.2rem;
-            color: #c9d1d9;
-        }
 
         button {
             background-color: #ffa500;
