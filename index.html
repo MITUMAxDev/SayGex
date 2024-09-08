@@ -122,6 +122,126 @@
             color: #ddd;
         }
 
+        /* Features Section */
+        .features {
+            background-color: #1e1e1e;
+            padding: 40px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .features h3 {
+            font-size: 2rem;
+            color: #ffa500;
+        }
+
+        .features p {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-top: 15px;
+        }
+
+        /* Image Carousel */
+        .image-carousel {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            margin: 40px auto;
+            overflow: hidden;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            border-radius: 10px;
+        }
+
+        .carousel-images {
+            display: flex;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: filter 0.5s ease, transform 0.5s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .carousel-images img.active {
+            filter: brightness(1) blur(0);
+            transform: scale(1.05);
+            z-index: 1;
+        }
+
+        .carousel-images img:not(.active) {
+            filter: brightness(0.5) blur(5px);
+            transform: scale(0.95);
+            z-index: 0;
+        }
+
+        .carousel-images img:nth-child(1) { left: 0; }
+        .carousel-images img:nth-child(2) { left: 100%; }
+        .carousel-images img:nth-child(3) { left: 200%; }
+
+        /* Script Box */
+        .script-box {
+            margin-top: 20px;
+            background-color: #0d1117;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            border: 1px solid #30363d;
+            position: relative;
+            max-width: 100%;
+            overflow-x: auto; /* Allow horizontal scrolling if content is too wide */
+        }
+
+        .script-box p {
+            font-size: 1.2rem;
+            color: #c9d1d9;
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+        @media (max-width: 768px) {
+            .script-box p {
+                font-size: 1rem; /* Smaller font on mobile */
+            }
+        }
+
+        .script-box::before {
+            content: 'SayGex Script';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background-color: #0d1117;
+            padding: 2px 8px;
+            font-size: 0.9rem;
+            color: #c9d1d9;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #ffa500;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e59400;
+        }
+
         /* Social Media Section */
         .social-media {
             margin-top: 30px;
@@ -226,6 +346,24 @@
         <p>- Multi-Language Support Team</p>
     </section>
 
+    <!-- Image Carousel -->
+    <section class="image-carousel">
+        <div class="carousel-images">
+            <img src="media/meme1.jpeg" alt="Image 1" class="active">
+            <img src="media/meme2.jpg" alt="Image 2">
+            <img src="media/meme3.jpg" alt="Image 3">
+        </div>
+    </section>
+
+    <!-- Script Section -->
+    <section class="script" id="scripts">
+        <h2>Get Script Here</h2>
+        <div class="script-box">
+            <p>loadstring(game:HttpGetAsync('https://saygexhub.com'))()</p>
+            <button id="copy-btn" onclick="copyToClipboard()">Copy</button>
+        </div>
+    </section>
+
     <!-- Team Section -->
     <section class="team" id="team">
         <h2>Meet the Team</h2>
@@ -275,26 +413,56 @@
         <p>&copy; 2024 SayGex Script Hub. All Rights Reserved.</p>
     </footer>
 
+    <!-- Firebase Initialization (replace with your config) -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"></script>
+
     <script>
-        // JavaScript to handle the real-time viewer count
-        function fetchViewerCount() {
-            // Simulate an API call (replace this with actual backend or service)
-            return new Promise((resolve) => {
-                const randomViewerCount = Math.floor(Math.random() * 100) + 1; // Random number for simulation
-                setTimeout(() => resolve(randomViewerCount), 1000);
-            });
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            databaseURL: "YOUR_DATABASE_URL"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Track active users
+        const userRef = database.ref('activeUsers');
+
+        function updateViewerCount(count) {
+            document.getElementById('viewerCount').textContent = count;
         }
 
-        function updateViewerCount() {
-            fetchViewerCount().then(count => {
-                document.getElementById('viewerCount').textContent = count;
-            });
+        // Add a new user when the page loads
+        userRef.transaction(currentValue => (currentValue || 0) + 1);
+
+        // Remove the user when the page unloads
+        window.addEventListener('beforeunload', () => {
+            userRef.transaction(currentValue => Math.max((currentValue || 0) - 1, 0));
+        });
+
+        // Listen for changes to the active users count
+        userRef.on('value', snapshot => {
+            updateViewerCount(snapshot.val() || 0);
+        });
+
+        function copyToClipboard() {
+            const script = "loadstring(game:HttpGetAsync('https://saygexhub.com'))()";
+            navigator.clipboard.writeText(script);
+            const button = document.getElementById('copy-btn');
+            button.textContent = 'Copied!';
+            button.style.backgroundColor = '#00c853';
+            setTimeout(() => {
+                button.textContent = 'Copy';
+                button.style.backgroundColor = '#ffa500';
+            }, 1000);
         }
-
-        setInterval(updateViewerCount, 5000); // Update every 5 seconds
-
-        // Initial load
-        updateViewerCount();
     </script>
 </body>
 </html>
