@@ -96,7 +96,7 @@
         /* Real-time Viewer Count */
         .viewer-count {
             margin-top: 10px;
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #ffa500;
         }
 
@@ -320,7 +320,7 @@
     <header>
         <h1>SAY<span>GEX</span> SCRIPT HUB</h1>
         <div class="viewer-count">
-            Current viewers: <span id="viewerCount">Loading...</span>
+            Current viewers: <span id="viewerCount">Ask your mama, uwaa uwaaa</span>
         </div>
         <nav>
             <a href="#about">About</a>
@@ -418,40 +418,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"></script>
 
     <script>
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID",
-            databaseURL: "YOUR_DATABASE_URL"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // Track active users
-        const userRef = database.ref('activeUsers');
-
-        function updateViewerCount(count) {
-            document.getElementById('viewerCount').textContent = count;
-        }
-
-        // Add a new user when the page loads
-        userRef.transaction(currentValue => (currentValue || 0) + 1);
-
-        // Remove the user when the page unloads
-        window.addEventListener('beforeunload', () => {
-            userRef.transaction(currentValue => Math.max((currentValue || 0) - 1, 0));
-        });
-
-        // Listen for changes to the active users count
-        userRef.on('value', snapshot => {
-            updateViewerCount(snapshot.val() || 0);
-        });
-
         function copyToClipboard() {
             const script = "loadstring(game:HttpGetAsync('https://saygexhub.com'))()";
             navigator.clipboard.writeText(script);
