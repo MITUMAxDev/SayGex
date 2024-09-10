@@ -1,72 +1,38 @@
+-- Cache services to improve performance
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
--- Fast Attack Optimization
-task.spawn(function()
-	local Data = Combat
-	local RigEvent = game:GetService("ReplicatedStorage").RigControllerEvent
-	local Animation = Instance.new("Animation")
-	local AttackCD, RecentlyFired, TryLag, lastFireValid = 0, 0, 0, 0
-	local MaxLag, MinDelay = 350, 0.00075
-	local Controller, Cooldown = nil, { combat = 0.07 }
+-- Cache the player's CombatFramework
+local player = Players.LocalPlayer
+local CombatFramework = require(player.PlayerScripts.CombatFramework)
 
-	-- Reset Cooldown based on weapon type
-	local function resetCD()
-		local WeaponName = Controller.currentWeaponModel.Name:lower()
-		AttackCD = tick() + (Cooldown[WeaponName] or 0.285) + ((TryLag / MaxLag) * 0.3)
-		RigEvent:FireServer(RigEvent, "weaponChange", WeaponName)
-		TryLag += 1
-		task.delay(Cooldown[WeaponName] or 0.285 + (TryLag + 0.5 / MaxLag) * 0.3, function()
-			TryLag -= 1
-		end)
-	end
+-- Cache the CameraShaker module and stop it
+local CameraShaker = require(ReplicatedStorage.Util.CameraShaker)
+CameraShaker:Stop()
 
-	-- Shared variables for attack mechanics
-	shared.orl = shared.orl or RL.wrapAttackAnimationAsync
-	shared.cpc = shared.cpc or PC.play
-	shared.dnew = shared.dnew or DMG.new
-	shared.attack = shared.attack or RigC.attack
+-- Function to safely access getupvalues
+local function safeGetUpvalue(tbl, index)
+    return tbl and tbl[index] or nil
+end
 
-	-- Override attack animation for FastAttack
-	RL.wrapAttackAnimationAsync = function(a, b, c, d, func)
-		if not _G.FastAttack then
-			PC.play = shared.cpc
-			return shared.orl(a, b, c, d, func)
-		end
+-- Cache active controller for faster access
+local activeController = safeGetUpvalue(getupvalues(CombatFramework), 2) and getupvalues(CombatFramework)[2]['activeController']
 
-		local Radius = _G.FastAttack or 65
-		if #canHits > 0 then
-			PC.play = function() end
-			a:Play(MinDelay, 0.01, 0.01)
-			func(canHits)
-			wait(a.length * 0.5)
-			a:Stop()
-		end
-	end
+-- Check if the activeController is valid before proceeding
+if activeController then
+    coroutine.wrap(function()
+        -- Use Stepped instead of Connect to avoid creating multiple listeners
+        RunService.Stepped:Connect(function()
+            -- Ensure timeToNextAttack exists to prevent errors
+            if activeController.timeToNextAttack then
+                -- Reset attack cooldown and increase hitbox size
+                activeController.timeToNextAttack = 0
+                activeController.hitboxMagnitude = 25
 
-	-- Main loop for handling fast attacks
-	while task.wait() do
-		pcall(function()
-			if #canHits > 0 then
-				Controller = Data.activeController
-				if Controller and Controller.equipped and not Char.Busy.Value and not LocalPlayer.PlayerGui.Main.Dialogue.Visible and Char.Stun.Value == 0 and Controller.currentWeaponModel then
-					if _G.FastAttack and tick() > AttackCD then
-						resetCD()
-					end
-
-					if tick() - lastFireValid > 0.5 then
-						Controller.timeToNextAttack = -1
-						Controller.increment = 1
-						Controller.hitboxMagnitude = 65
-						pcall(task.spawn, Controller.attack, Controller)
-						lastFireValid = tick()
-					end
-
-					local AID = Controller.anims.basic[3] or Controller.anims.basic[2]
-					Animation.AnimationId = AID
-					local Playing = Controller.humanoid:LoadAnimation(Animation)
-					Playing:Play(MinDelay, 0.01, 0.01)
-					RigEvent:FireServer(RigEvent, "hit", canHits, AID and 1 or 2, "")
-				end
-			end
-		end)
-	end
-end)
+                -- Call attack method
+                activeController:attack()
+            end
+        end)
+    end)()
+end
