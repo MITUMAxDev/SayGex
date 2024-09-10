@@ -1,3 +1,4 @@
+
 -- Fast Attack Optimization
 task.spawn(function()
 	local Data = Combat
@@ -52,7 +53,7 @@ task.spawn(function()
 					end
 
 					if tick() - lastFireValid > 0.5 then
-						Controller.timeToNextAttack = 0
+						Controller.timeToNextAttack = -1
 						Controller.increment = 1
 						Controller.hitboxMagnitude = 65
 						pcall(task.spawn, Controller.attack, Controller)
