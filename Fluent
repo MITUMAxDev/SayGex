@@ -24,6 +24,7 @@ local a, b = {
                     {52, "ModuleScript", {"Light"}},
                     {51, "ModuleScript", {"Darker"}},
                     {53, "ModuleScript", {"Rose"}},
+                    {54, "ModuleScript", {"SayGex"}},
                     {49, "ModuleScript", {"Aqua"}},
                     {48, "ModuleScript", {"Amethyst"}}
                 }
